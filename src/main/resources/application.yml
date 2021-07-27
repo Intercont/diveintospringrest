@@ -3,3 +3,5 @@ spring:
     url: jdbc:mysql://localhost/diveintospringrest?createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
     password:
+  jpa:
+    show-sql: true

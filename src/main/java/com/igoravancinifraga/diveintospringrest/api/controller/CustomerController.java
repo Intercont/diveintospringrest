@@ -1,21 +1,74 @@
 package com.igoravancinifraga.diveintospringrest.api.controller;
 
 import com.igoravancinifraga.diveintospringrest.domain.model.Customer;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.igoravancinifraga.diveintospringrest.domain.repository.CustomerRepository;
+import com.igoravancinifraga.diveintospringrest.domain.service.CustomerCatalogService;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
+@RequestMapping("/customers")
 public class CustomerController {
 
-    @GetMapping("/customer")
-    public List<Customer> listar() {
-        var cliente1 = new Customer(1L, "Igor Avancini Fraga", "igoravancinifraga@gmail.com", "+5519981351208");
-        var cliente2 = new Customer(2L, "Fernanda Menezes", "fer@gmail.com", "12354645");
-        var cliente3 = new Customer(3L, "Lucky Lindão", "lucky@gmail.com", "+145632848");
+    private CustomerRepository repository;
+    private CustomerCatalogService service;
 
-        return Arrays.asList(cliente1, cliente2, cliente3);
+    @GetMapping
+    public List<Customer> listCustomers() {
+        return repository.findAll();
     }
+
+    @GetMapping("/{customerId}")
+    public ResponseEntity<Customer> findCustomer(@PathVariable Long customerId) {
+        //short version with Lambda funcional
+        return repository.findById(customerId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+
+        //long version for better understanding
+//        Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
+//
+//        if (optionalCustomer.isPresent()) {
+//            return ResponseEntity.ok(optionalCustomer.get());
+//        }
+//
+//        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Customer addCustomer(@Valid @RequestBody Customer customer) {
+        return service.save(customer);
+    }
+
+    @PutMapping("/{customerId}")
+    public ResponseEntity<Customer> updateCustomer(@PathVariable Long customerId,
+                                                   @Valid @RequestBody Customer customer) {
+        if (!repository.existsById(customerId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        customer.setId(customerId);
+        return ResponseEntity.ok(service.save(customer));
+
+    }
+
+    @DeleteMapping("/{customerId}")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable Long customerId) {
+        if (!repository.existsById(customerId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        service.delete(customerId);
+
+        return ResponseEntity.noContent().build(); //no content is commonly used when the answer has no body
+
+    }
+
 }
