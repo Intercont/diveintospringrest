@@ -17,7 +17,7 @@ public class CustomerCatalogService {
     public Customer save(Customer customer) {
         boolean emailInUse = customerRepository.findByEmail(customer.getEmail())
                 .stream()
-                .anyMatch(existingCustomer -> !existingCustomer.equals(customer)); //verify if this customer is different or if this is a update
+                .anyMatch(existingCustomer -> !existingCustomer.equals(customer)); //verify if this customer is different or  if this is a update
 
         if (emailInUse) {
             throw new BusinessException("There is already a customer with this email");
@@ -29,5 +29,10 @@ public class CustomerCatalogService {
     @Transactional
     public void delete(Long id) {
         customerRepository.deleteById(id);
+    }
+
+    public Customer findById(Long id) {
+        return customerRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Customer ID does not Exists"));
     }
 }
