@@ -25,8 +25,8 @@ public class Delivery {
     private Long id;
 
     @NotNull
-    @Valid
-    @ConvertGroup(from = Default.class, to = ValidationGroups.CustomerId.class) //specific group to validate only this field from Customer
+//    @Valid
+//    @ConvertGroup(from = Default.class, to = ValidationGroups.CustomerId.class) //specific group to validate only this field from Customer
     @ManyToOne //one customer to many deliveries
 //    @JoinColumn(name = "customer_id") //if I wanna specify a custom join column name, this property is used
     private Customer customer;
@@ -39,13 +39,13 @@ public class Delivery {
     @NotNull
     private BigDecimal fee;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Enumerated(EnumType.STRING) //we wanna save the value of the enum in the column
     private StatusDelivery status;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime orderDate;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime conclusionDate;
 }

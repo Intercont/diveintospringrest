@@ -1,11 +1,11 @@
-package com.igoravancinifraga.diveintospringrest.api.model;
+package com.igoravancinifraga.diveintospringrest.api.model.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RecipientResponseDto {
     private String name;
     private String street;

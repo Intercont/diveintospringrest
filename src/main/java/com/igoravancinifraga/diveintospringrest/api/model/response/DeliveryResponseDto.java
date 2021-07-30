@@ -1,9 +1,7 @@
-package com.igoravancinifraga.diveintospringrest.api.model;
+package com.igoravancinifraga.diveintospringrest.api.model.response;
 
 import com.igoravancinifraga.diveintospringrest.domain.model.StatusDelivery;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -11,10 +9,12 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DeliveryResponseDto {
 
     private Long id;
-    private String customerName;
+    private CustomerBriefingResponseDto customer;
     private RecipientResponseDto recipient;
     private BigDecimal fee;
     private StatusDelivery status;
