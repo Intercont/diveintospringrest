@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         CustomerException exception = CustomerException.builder()
                 .status(status.value())
-                .dateTime(LocalDateTime.now())
+                .dateTime(OffsetDateTime.now())
                 .title("One or more fields are invalid")
                 .fields(fields)
                 .build();
@@ -55,7 +55,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         CustomerException businessException = CustomerException.builder()
                 .status(status.value())
-                .dateTime(LocalDateTime.now())
+                .dateTime(OffsetDateTime.now())
                 .title(exception.getMessage())
                 .build();
 

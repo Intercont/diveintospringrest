@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @AllArgsConstructor
 @Service
@@ -23,7 +23,7 @@ public class RequestDeliveryService {
 
         delivery.setCustomer(customer);
         delivery.setStatus(StatusDelivery.PENDING);
-        delivery.setOrderDate(LocalDateTime.now());
+        delivery.setOrderDate(OffsetDateTime.now());
 
         return deliveryRepository.save(delivery);
     }

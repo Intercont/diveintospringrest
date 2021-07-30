@@ -1,5 +1,7 @@
 package com.igoravancinifraga.diveintospringrest.api.controller;
 
+import com.igoravancinifraga.diveintospringrest.api.model.DeliveryResponseDto;
+import com.igoravancinifraga.diveintospringrest.api.model.RecipientResponseDto;
 import com.igoravancinifraga.diveintospringrest.domain.model.Delivery;
 import com.igoravancinifraga.diveintospringrest.domain.repository.DeliveryRepository;
 import com.igoravancinifraga.diveintospringrest.domain.service.RequestDeliveryService;
@@ -31,9 +33,29 @@ public class DeliveryController {
     }
 
     @GetMapping("/{deliveryId}")
-    public ResponseEntity<Delivery> find(@PathVariable Long deliveryId) {
+    public ResponseEntity<DeliveryResponseDto> find(@PathVariable Long deliveryId) {
+
         return deliveryRepository.findById(deliveryId)
-                .map(ResponseEntity::ok) //return OK with the Optional content as a response
+                .map(delivery -> {
+                    DeliveryResponseDto build = DeliveryResponseDto.builder()
+                            .id(delivery.getId())
+                            .customerName(delivery.getCustomer().getName())
+                            .recipient(RecipientResponseDto.builder()
+                                    .name(delivery.getRecipient().getName())
+                                    .street(delivery.getRecipient().getStreet())
+                                    .number(delivery.getRecipient().getNumber())
+                                    .complement(delivery.getRecipient().getComplement())
+                                    .district(delivery.getRecipient().getDistrict())
+                                    .build())
+                            .fee(delivery.getFee())
+                            .status(delivery.getStatus())
+                            .orderDate(delivery.getOrderDate())
+                            .conclusionDate(delivery.getConclusionDate())
+                            .build();
+
+                    return ResponseEntity.ok(build);
+
+                }) //return OK with the Optional content as a response
                 .orElse(ResponseEntity.notFound().build());
 
     }
