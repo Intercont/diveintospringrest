@@ -1,0 +1,23 @@
+version: '3.5'
+
+services:
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - app.network
+
+#  adminer:
+#    image: adminer
+#    restart: always
+#    ports:
+#      - 80:80
+
+networks:
+  app.network:
+    driver: bridge
