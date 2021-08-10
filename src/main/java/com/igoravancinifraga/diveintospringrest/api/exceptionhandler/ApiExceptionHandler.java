@@ -1,6 +1,7 @@
 package com.igoravancinifraga.diveintospringrest.api.exceptionhandler;
 
 import com.igoravancinifraga.diveintospringrest.domain.exception.BusinessException;
+import com.igoravancinifraga.diveintospringrest.domain.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -52,6 +53,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleBusinessException(BusinessException exception, WebRequest request) {
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        CustomerException businessException = CustomerException.builder()
+                .status(status.value())
+                .dateTime(OffsetDateTime.now())
+                .title(exception.getMessage())
+                .build();
+
+        return this.handleExceptionInternal(exception, businessException, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException exception, WebRequest request) {
+
+        HttpStatus status = HttpStatus.NOT_FOUND;
 
         CustomerException businessException = CustomerException.builder()
                 .status(status.value())

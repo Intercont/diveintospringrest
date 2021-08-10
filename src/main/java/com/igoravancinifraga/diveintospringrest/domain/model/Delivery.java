@@ -41,7 +41,9 @@ public class Delivery {
     @NotNull
     private BigDecimal fee;
 
-    @OneToMany(mappedBy = "delivery") //one delivery with many events, have to specify the property on the Event side
+    //one delivery with many events, have to specify the property on the Event side
+    //CascadeType.ALL will save through cascading resource from JPA when a event is added to this list
+    @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL)
     private List<Event> events = new ArrayList<>();
 
 //    @JsonProperty(access = JsonProperty.Access.READ_ONLY)

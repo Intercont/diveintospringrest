@@ -9,6 +9,7 @@ import java.time.OffsetDateTime;
 @Setter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Event {

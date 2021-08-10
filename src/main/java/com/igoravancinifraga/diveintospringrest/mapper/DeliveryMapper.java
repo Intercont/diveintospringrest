@@ -16,15 +16,15 @@ public class DeliveryMapper {
 
     private ModelMapper modelMapper;
 
-    public DeliveryResponseDto toModel(Delivery delivery) {
+    public DeliveryResponseDto toResponseModel(Delivery delivery) {
         return modelMapper.map(delivery, DeliveryResponseDto.class);
     }
 
-    public List<DeliveryResponseDto> toCollectionModel(List<Delivery> deliveryList) {
+    public List<DeliveryResponseDto> toCollectionResponseModel(List<Delivery> deliveryList) {
         //we cannot convert it directly cause the convertion will be ignored and the Entity will be passed
         //so, in this case, let's convert through mapping
         return deliveryList.stream()
-                .map(this::toModel)
+                .map(this::toResponseModel)
                 .collect(Collectors.toList());
     }
 

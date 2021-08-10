@@ -28,18 +28,18 @@ public class DeliveryController {
     public DeliveryResponseDto request(@Valid @RequestBody DeliveryRequestDto deliveryRequestDto) {
         Delivery newDelivery = deliveryMapper.toEntity(deliveryRequestDto);
         Delivery requestedDelivery = requestDeliveryService.request(newDelivery);
-        return deliveryMapper.toModel(requestedDelivery);
+        return deliveryMapper.toResponseModel(requestedDelivery);
     }
 
     @GetMapping
     public List<DeliveryResponseDto> list() {
-        return deliveryMapper.toCollectionModel(deliveryRepository.findAll());
+        return deliveryMapper.toCollectionResponseModel(deliveryRepository.findAll());
     }
 
     @GetMapping("/{deliveryId}")
     public ResponseEntity<DeliveryResponseDto> find(@PathVariable Long deliveryId) {
         return deliveryRepository.findById(deliveryId)
-                .map(delivery -> ResponseEntity.ok(deliveryMapper.toModel(delivery))) //return OK with the Optional content as a response
+                .map(delivery -> ResponseEntity.ok(deliveryMapper.toResponseModel(delivery))) //return OK with the Optional content as a response
                 .orElse(ResponseEntity.notFound().build());
     }
 }
