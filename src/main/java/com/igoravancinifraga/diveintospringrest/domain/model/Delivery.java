@@ -13,6 +13,8 @@ import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -39,6 +41,9 @@ public class Delivery {
     @NotNull
     private BigDecimal fee;
 
+    @OneToMany(mappedBy = "delivery") //one delivery with many events, have to specify the property on the Event side
+    private List<Event> events = new ArrayList<>();
+
 //    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Enumerated(EnumType.STRING) //we wanna save the value of the enum in the column
     private StatusDelivery status;
@@ -48,4 +53,17 @@ public class Delivery {
 
 //    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime conclusionDate;
+
+    public Event addEvent(String description) {
+        Event event = Event.builder()
+                .description(description)
+                .eventDateTime(OffsetDateTime.now())
+                .delivery(this)
+                .build();
+
+        this.getEvents().add(event);
+
+        return event;
+
+    }
 }
