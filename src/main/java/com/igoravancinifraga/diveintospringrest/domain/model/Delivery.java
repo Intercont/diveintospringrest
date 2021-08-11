@@ -1,7 +1,6 @@
 package com.igoravancinifraga.diveintospringrest.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.igoravancinifraga.diveintospringrest.domain.ValidationGroups;
+import com.igoravancinifraga.diveintospringrest.domain.exception.BusinessException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,8 +8,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -27,10 +24,7 @@ public class Delivery {
     private Long id;
 
     @NotNull
-//    @Valid
-//    @ConvertGroup(from = Default.class, to = ValidationGroups.CustomerId.class) //specific group to validate only this field from Customer
     @ManyToOne //one customer to many deliveries
-//    @JoinColumn(name = "customer_id") //if I wanna specify a custom join column name, this property is used
     private Customer customer;
 
     @NotNull
@@ -46,14 +40,11 @@ public class Delivery {
     @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL)
     private List<Event> events = new ArrayList<>();
 
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Enumerated(EnumType.STRING) //we wanna save the value of the enum in the column
     private StatusDelivery status;
 
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime orderDate;
 
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime conclusionDate;
 
     public Event addEvent(String description) {
@@ -67,5 +58,22 @@ public class Delivery {
 
         return event;
 
+    }
+
+    public void complete() {
+        if (isNotCompletable()) {
+            throw new BusinessException("Delivery cannot be finished");
+        }
+
+        this.setStatus(StatusDelivery.COMPLETED);
+        this.setConclusionDate(OffsetDateTime.now());
+    }
+
+    public boolean isCompletable() {
+        return StatusDelivery.PENDING.equals(getStatus());
+    }
+
+    public boolean isNotCompletable() {
+        return !isCompletable();
     }
 }

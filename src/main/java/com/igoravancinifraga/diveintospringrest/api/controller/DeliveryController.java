@@ -4,6 +4,7 @@ import com.igoravancinifraga.diveintospringrest.api.model.request.DeliveryReques
 import com.igoravancinifraga.diveintospringrest.api.model.response.DeliveryResponseDto;
 import com.igoravancinifraga.diveintospringrest.domain.model.Delivery;
 import com.igoravancinifraga.diveintospringrest.domain.repository.DeliveryRepository;
+import com.igoravancinifraga.diveintospringrest.domain.service.DeliveryCompletionService;
 import com.igoravancinifraga.diveintospringrest.domain.service.RequestDeliveryService;
 import com.igoravancinifraga.diveintospringrest.mapper.DeliveryMapper;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ public class DeliveryController {
     private RequestDeliveryService requestDeliveryService;
     private DeliveryRepository deliveryRepository;
     private DeliveryMapper deliveryMapper;
+    private DeliveryCompletionService deliveryCompletionService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -29,6 +31,12 @@ public class DeliveryController {
         Delivery newDelivery = deliveryMapper.toEntity(deliveryRequestDto);
         Delivery requestedDelivery = requestDeliveryService.request(newDelivery);
         return deliveryMapper.toResponseModel(requestedDelivery);
+    }
+
+    @PutMapping("/{deliveryId}/completion")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void complete(@PathVariable Long deliveryId) {
+        deliveryCompletionService.complete(deliveryId);
     }
 
     @GetMapping
